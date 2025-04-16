@@ -1,15 +1,14 @@
-// components/SearchBar.jsx
 import React, { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 const genres = [
   'Pop', 'Rock', 'Hip-Hop', 'Electronic', 'Country', 'Jazz', 'Classical', 'R&B', 'Metal',
-  // Add more genres as needed
 ];
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('');
+  const [type, setType] = useState('track,artist,album'); 
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -19,9 +18,13 @@ const SearchBar = ({ onSearch }) => {
     setGenre(e.target.value);
   };
 
+  const handleTypeChange = (e) => {
+    setType(e.target.value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(query, genre);
+    onSearch(query, genre, type);
   };
 
   return (
@@ -42,6 +45,16 @@ const SearchBar = ({ onSearch }) => {
         {genres.map((genre) => (
           <option key={genre} value={genre}>{genre}</option>
         ))}
+      </select>
+      <select
+        value={type}
+        onChange={handleTypeChange}
+        className="px-4 py-2 rounded-md focus:outline-none bg-white border border-gray-300 text-black"
+      >
+        <option value="track,artist,album">All Types</option>
+        <option value="track">Songs</option>
+        <option value="artist">Artists</option>
+        <option value="album">Albums</option>
       </select>
       <button
         type="submit"

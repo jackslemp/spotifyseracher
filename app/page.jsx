@@ -31,7 +31,7 @@ const HomePage = () => {
     fetchAccessToken();
   }, []);
 
-  const handleSearch = async (query, genre) => {
+  const handleSearch = async (query, genre, type) => {
     if (!accessToken) {
       console.error('Access token not available');
       return;
@@ -49,11 +49,20 @@ const HomePage = () => {
         },
         params: {
           q: searchString,
-          type: 'track,artist',
+          type: type, 
         },
       });
 
-      setSearchResults(response.data.tracks.items);
+      const tracks = response.data.tracks?.items || [];
+      const artists = response.data.artists?.items || [];
+      const albums = response.data.albums?.items || [];
+
+      let combinedResults = [];
+      if (type.includes('track')) combinedResults.push(...tracks);
+      if (type.includes('artist')) combinedResults.push(...artists);
+      if (type.includes('album')) combinedResults.push(...albums);
+
+      setSearchResults(combinedResults);
     } catch (error) {
       console.error('Error searching Spotify:', error);
     }
